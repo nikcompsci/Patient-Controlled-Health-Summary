@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Choose Summary Information | Patient Health Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script defer src="js/app.js"></script>
+</head>
+<body data-page="choice">
+  <main class="container narrow">
+    <header class="site-header"><p class="eyebrow">Patient-controlled health summary</p><nav aria-label="Account navigation"><a id="sign-out" href="./">Sign out</a></nav></header>
+    <p id="loading" class="notice" role="status" aria-live="polite" hidden></p>
+    <section id="signed-out" class="card" aria-labelledby="signed-out-title" hidden>
+      <h1 id="signed-out-title">Sign in to choose summary information</h1>
+      <p>Your secure session is not available. Sign in to retrieve your record.</p>
+      <ul><li><a href="./launch.html">Sign in</a></li><li><a href="./health.html">Health check</a></li></ul>
+    </section>
+    <p id="page-error" class="notice error" role="alert" hidden></p>
+    <section id="choice-panel" class="card" aria-labelledby="choice-title" hidden>
+      <h1 id="choice-title">What would you like to retrieve from your health record?</h1>
+      <p>Select one or more sections. Your choices use the health information already retrieved for this session.</p>
+      <form id="choice-form">
+        <fieldset>
+          <legend>Choose the information to include</legend>
+          <label class="check-option"><input type="checkbox" name="sections" value="allergies"> <span>Allergies and Reactions</span></label>
+          <label class="check-option"><input type="checkbox" name="sections" value="medications"> <span>Current Medications</span></label>
+          <label class="check-option"><input type="checkbox" name="sections" value="conditions"> <span>Medical Conditions</span></label>
+          <label class="check-option"><input type="checkbox" name="sections" value="observations"> <span>Recent Results</span></label>
+          <label class="check-option"><input type="checkbox" name="sections" value="immunizations"> <span>Immunizations</span></label>
+          <label class="check-option"><input type="checkbox" name="sections" value="procedures"> <span>Procedures</span></label>
+        </fieldset>
+        <p id="choice-error" class="notice error" role="alert" hidden>Select at least one section to create your summary.</p>
+        <button class="button" type="submit">Generate Summary</button>
+      </form>
+      <p><a href="./index.html">Back to your latest summary</a></p>
+    </section>
+  </main>
+</body>
+</html>

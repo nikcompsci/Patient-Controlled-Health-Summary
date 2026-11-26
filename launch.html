@@ -3,48 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sign in | SMART Patient App</title>
+  <title>Sign in | Patient Health Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/fhirclient@3.0.1/bundle/fhir-client.js"></script>
 </head>
 <body>
-  <main>
-    <h1>Starting patient sign-in…</h1>
-    <p>You are leaving this page for the SMART sandbox. Sign in there as the patient, then the sandbox sends you back here.</p>
-    <p id="error"></p>
+  <main class="container narrow">
+    <header class="site-header"><p class="eyebrow">Patient-controlled health summary</p></header>
+    <section class="card" aria-labelledby="launch-title">
+      <h1 id="launch-title">Starting secure sign-in…</h1>
+      <p>You are connecting to the SMART sandbox. Sign in there as the patient to continue.</p>
+      <p id="error" class="notice error" role="alert" aria-live="assertive"></p>
+    </section>
   </main>
   <script>
-    // Patient standalone against the SMART Health IT R4 sandbox.
-    // The sandbox reads the "/sim/..." segment and shows a patient login
-    // because the launch type is patient-standalone (the 3 below).
-    // A different iss on the query string wins, so the SMART Launcher can
-    // still start this same page.
-    var launchOptions = [
-      3, "", "", "AUTO",
-      0, 0, 0,
-      "", "", "", "", "", "", "",
-      0, 1, ""
-    ];
-
+    // These options request a patient-standalone launch from the public SMART R4 sandbox; an iss supplied by a SMART launcher still takes precedence.
+    var launchOptions = [3, "", "", "AUTO", 0, 0, 0, "", "", "", "", "", "", "", 0, 1, ""];
     var sandboxIss = "https://launch.smarthealthit.org/v/r4/sim/"
-      + btoa(JSON.stringify(launchOptions)).replace(/=+$/g, "").replace(/\+/g, "-").replace(/\//g, "_")
-      + "/fhir";
+      + btoa(JSON.stringify(launchOptions)).replace(/=+$/g, "").replace(/\+/g, "-").replace(/\//g, "_") + "/fhir";
 
-    // authorize() redirects the browser. Code after it does not run
-    // unless the sandbox cannot be reached.
+    // FHIR.oauth2.authorize() starts SMART authorization and redirects to the FHIR server; the callback returns to index.html with the authorized session.
+    // The SMART scopes grant patient identity and read-only access to each resource used by the summaries.
     FHIR.oauth2.authorize({
-      // Public client. The sandbox does not require a registered secret.
       clientId: "my_web_app",
-      // Keep patient identity access and request read-only observations for the selected patient.
-      scope: "launch/patient openid fhirUser patient/Patient.read patient/Observation.read",
-      // Must be this app's index.html. fhir-client turns the relative URL
-      // into the full GitHub Pages URL before sending it.
+      scope: "launch/patient openid fhirUser patient/Patient.read patient/AllergyIntolerance.read patient/MedicationRequest.read patient/Condition.read patient/Observation.read patient/Immunization.read patient/Procedure.read",
       redirectUri: "index.html",
       iss: sandboxIss
     }).catch(function (error) {
       document.querySelector("h1").textContent = "Could not start sign-in";
-      document.getElementById("error").textContent = error.message || String(error);
+      document.getElementById("error").textContent = "Please check your connection and try again.";
     });
   </script>
 </body>
 </html>
-
